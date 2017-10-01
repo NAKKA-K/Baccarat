@@ -1,0 +1,66 @@
+c:\users\kaoru katsuta\documents\visual studio 2017\Projects\hoge\hoge\bin\Debug\hoge.exe.config
+c:\users\kaoru katsuta\documents\visual studio 2017\Projects\hoge\hoge\bin\Debug\hoge.exe
+c:\users\kaoru katsuta\documents\visual studio 2017\Projects\hoge\hoge\bin\Debug\hoge.pdb
+c:\users\kaoru katsuta\documents\visual studio 2017\Projects\hoge\hoge\bin\Debug\hoge.xml
+c:\users\kaoru katsuta\documents\visual studio 2017\Projects\hoge\hoge\obj\Debug\hoge.vbprojResolveAssemblyReference.cache
+c:\users\kaoru katsuta\documents\visual studio 2017\Projects\hoge\hoge\obj\Debug\hoge.Form1.resources
+c:\users\kaoru katsuta\documents\visual studio 2017\Projects\hoge\hoge\obj\Debug\hoge.Resources.resources
+c:\users\kaoru katsuta\documents\visual studio 2017\Projects\hoge\hoge\obj\Debug\hoge.vbproj.GenerateResource.Cache
+c:\users\kaoru katsuta\documents\visual studio 2017\Projects\hoge\hoge\obj\Debug\hoge.exe
+c:\users\kaoru katsuta\documents\visual studio 2017\Projects\hoge\hoge\obj\Debug\hoge.xml
+c:\users\kaoru katsuta\documents\visual studio 2017\Projects\hoge\hoge\obj\Debug\hoge.pdb
+C:\Users\Kaoru\Desktop\hogehoge\hoge\hoge\bin\Debug\hoge.exe.config
+C:\Users\Kaoru\Desktop\hogehoge\hoge\hoge\bin\Debug\hoge.exe
+C:\Users\Kaoru\Desktop\hogehoge\hoge\hoge\bin\Debug\hoge.pdb
+C:\Users\Kaoru\Desktop\hogehoge\hoge\hoge\bin\Debug\hoge.xml
+C:\Users\Kaoru\Desktop\hogehoge\hoge\hoge\obj\Debug\hoge.vbprojResolveAssemblyReference.cache
+C:\Users\Kaoru\Desktop\hogehoge\hoge\hoge\obj\Debug\hoge.Form1.resources
+C:\Users\Kaoru\Desktop\hogehoge\hoge\hoge\obj\Debug\hoge.Resources.resources
+C:\Users\Kaoru\Desktop\hogehoge\hoge\hoge\obj\Debug\hoge.vbproj.GenerateResource.Cache
+C:\Users\Kaoru\Desktop\hogehoge\hoge\hoge\obj\Debug\hoge.exe
+C:\Users\Kaoru\Desktop\hogehoge\hoge\hoge\obj\Debug\hoge.xml
+C:\Users\Kaoru\Desktop\hogehoge\hoge\hoge\obj\Debug\hoge.pdb
+C:\Users\Kaoru Katsuta\Desktop\hogehoge\hoge\hoge\bin\Debug\hoge.exe.config
+C:\Users\Kaoru Katsuta\Desktop\hogehoge\hoge\hoge\bin\Debug\hoge.exe
+C:\Users\Kaoru Katsuta\Desktop\hogehoge\hoge\hoge\bin\Debug\hoge.pdb
+C:\Users\Kaoru Katsuta\Desktop\hogehoge\hoge\hoge\bin\Debug\hoge.xml
+C:\Users\Kaoru Katsuta\Desktop\hogehoge\hoge\hoge\obj\Debug\hoge.vbprojResolveAssemblyReference.cache
+C:\Users\Kaoru Katsuta\Desktop\hogehoge\hoge\hoge\obj\Debug\hoge.Form1.resources
+C:\Users\Kaoru Katsuta\Desktop\hogehoge\hoge\hoge\obj\Debug\hoge.Resources.resources
+C:\Users\Kaoru Katsuta\Desktop\hogehoge\hoge\hoge\obj\Debug\hoge.vbproj.GenerateResource.Cache
+C:\Users\Kaoru Katsuta\Desktop\hogehoge\hoge\hoge\obj\Debug\hoge.exe
+C:\Users\Kaoru Katsuta\Desktop\hogehoge\hoge\hoge\obj\Debug\hoge.xml
+C:\Users\Kaoru Katsuta\Desktop\hogehoge\hoge\hoge\obj\Debug\hoge.pdb
+C:\Users\Kaoru Katsuta\Desktop\完成(？)\hogehoge\hoge\hoge\bin\Debug\hoge.exe.config
+C:\Users\Kaoru Katsuta\Desktop\完成(？)\hogehoge\hoge\hoge\bin\Debug\hoge.exe
+C:\Users\Kaoru Katsuta\Desktop\完成(？)\hogehoge\hoge\hoge\obj\Debug\hoge.Form1.resources
+C:\Users\Kaoru Katsuta\Desktop\完成(？)\hogehoge\hoge\hoge\obj\Debug\hoge.Resources.resources
+C:\Users\Kaoru Katsuta\Desktop\完成(？)\hogehoge\hoge\hoge\obj\Debug\hoge.vbproj.GenerateResource.Cache
+C:\Users\Kaoru Katsuta\Desktop\完成(？)\hogehoge\hoge\hoge\obj\Debug\hoge.exe
+C:\Users\Kaoru Katsuta\Desktop\完成(？)\hogehoge\hoge\hoge\obj\Debug\hoge.xml
+C:\Users\Kaoru Katsuta\Desktop\完成(？)\hogehoge\hoge\hoge\obj\Debug\hoge.pdb
+C:\Users\Kaoru Katsuta\Desktop\完成(？)\hogehoge\hoge\hoge\bin\Debug\hoge.pdb
+C:\Users\Kaoru Katsuta\Desktop\完成(？)\hogehoge\hoge\hoge\bin\Debug\hoge.xml
+C:\Users\Kaoru Katsuta\Desktop\完成(？)\hogehoge\hoge\hoge\obj\Debug\hoge.vbprojResolveAssemblyReference.cache
+C:\Users\Kaoru Katsuta\Desktop\bugfix\hoge\hoge\bin\Debug\hoge.exe.config
+C:\Users\Kaoru Katsuta\Desktop\bugfix\hoge\hoge\bin\Debug\hoge.exe
+C:\Users\Kaoru Katsuta\Desktop\bugfix\hoge\hoge\bin\Debug\hoge.pdb
+C:\Users\Kaoru Katsuta\Desktop\bugfix\hoge\hoge\bin\Debug\hoge.xml
+C:\Users\Kaoru Katsuta\Desktop\bugfix\hoge\hoge\obj\Debug\hoge.vbprojResolveAssemblyReference.cache
+C:\Users\Kaoru Katsuta\Desktop\bugfix\hoge\hoge\obj\Debug\hoge.Form1.resources
+C:\Users\Kaoru Katsuta\Desktop\bugfix\hoge\hoge\obj\Debug\hoge.Resources.resources
+C:\Users\Kaoru Katsuta\Desktop\bugfix\hoge\hoge\obj\Debug\hoge.vbproj.GenerateResource.Cache
+C:\Users\Kaoru Katsuta\Desktop\bugfix\hoge\hoge\obj\Debug\hoge.exe
+C:\Users\Kaoru Katsuta\Desktop\bugfix\hoge\hoge\obj\Debug\hoge.xml
+C:\Users\Kaoru Katsuta\Desktop\bugfix\hoge\hoge\obj\Debug\hoge.pdb
+C:\Users\翔\Desktop\Baccarat\hoge\hoge\bin\Debug\hoge.exe.config
+C:\Users\翔\Desktop\Baccarat\hoge\hoge\obj\Debug\hoge.exe
+C:\Users\翔\Desktop\Baccarat\hoge\hoge\obj\Debug\hoge.xml
+C:\Users\翔\Desktop\Baccarat\hoge\hoge\obj\Debug\hoge.pdb
+C:\Users\翔\Desktop\Baccarat\hoge\hoge\bin\Debug\hoge.exe
+C:\Users\翔\Desktop\Baccarat\hoge\hoge\bin\Debug\hoge.pdb
+C:\Users\翔\Desktop\Baccarat\hoge\hoge\bin\Debug\hoge.xml
+C:\Users\翔\Desktop\Baccarat\hoge\hoge\obj\Debug\hoge.vbprojResolveAssemblyReference.cache
+C:\Users\翔\Desktop\Baccarat\hoge\hoge\obj\Debug\hoge.Form1.resources
+C:\Users\翔\Desktop\Baccarat\hoge\hoge\obj\Debug\hoge.Resources.resources
+C:\Users\翔\Desktop\Baccarat\hoge\hoge\obj\Debug\hoge.vbproj.GenerateResource.Cache
