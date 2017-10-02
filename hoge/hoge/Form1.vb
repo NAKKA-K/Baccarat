@@ -205,8 +205,8 @@
     ' ドラゴンの発生を司るメソッド
     Private Function dragonGenerate() As Boolean
         ' ドラゴンは発生するか？
-        If isDragon = False AndAlso (isMaxLengeRow(row) OrElse isPaintButton(getIdxOfButton(buttonRow + 1, buttonColumn))) Then
-            If isMaxLengeColumn(column) Then ' 範囲外
+        If isDragon = False AndAlso (isMaxLengeRow(buttonRow) OrElse isPaintButton(getIdxOfButton(buttonRow + 1, buttonColumn))) Then
+            If isMaxLengeColumn(buttonColumn) Then ' 範囲外
                 maxLenge = True
                 Return False
             End If
@@ -218,7 +218,7 @@
 
         If isDragon = False Then
             buttonRow = buttonRow + 1
-        ElseIf isMaxLengeColumn(column) Then ' 範囲外
+        ElseIf isMaxLengeColumn(buttonColumn) Then ' 範囲外
             maxLenge = True
             Return False
         Else
@@ -307,7 +307,7 @@
         If dominateColor = COLOR_GREEN Then ' 中立
             If isDragon = False Then
                 buttonRow = buttonRow + 1
-            ElseIf isMaxLengeColumn(column) Then ' 範囲外
+            ElseIf isMaxLengeColumn(buttonColumn) Then ' 範囲外
                 maxLenge = True
                 Return
             Else
@@ -323,7 +323,7 @@
             If isDragon = True Then
                 buttonColumn = dragonBtnColumn + 1
                 isDragon = False
-            ElseIf isMaxLengeColumn(column) Then ' 範囲外
+            ElseIf isMaxLengeColumn(buttonColumn) Then ' 範囲外
                 maxLenge = True
                 Return
             Else
@@ -341,7 +341,7 @@
 
     ' 渡された列数が最大列数であるか判定する
     Function isMaxLengeColumn(ByVal column As Integer) As Boolean
-        if column >= BUTTON_COLUMN - 1 Then
+        If column >= BUTTON_COLUMN - 1 Then
             Return True
         End If
         Return False
@@ -349,7 +349,7 @@
 
     ' 渡された行数が最大行数であるか判定する
     Function isMaxLengeRow(ByVal row As Integer) As Boolean
-        if row >= BUTTON_ROW - 1 Then
+        If row >= BUTTON_ROW - 1 Then
             Return True
         End If
         Return False
@@ -396,3 +396,4 @@
 
     End Sub
 
+End Class
