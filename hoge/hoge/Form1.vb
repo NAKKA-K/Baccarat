@@ -1,9 +1,4 @@
 ﻿Public Class Form1
-    Dim num(255), Val, Debug As Integer
-    Dim slash As Char
-    Dim CmdButtons(9) As System.Windows.Forms.Button
-
-    ' これより上は使っていない(何に使っていたのか分からないため、一応置いている。いらなければ消す)
     Dim maxLenge As Boolean
 
     Dim gameStatus As String
@@ -210,8 +205,8 @@
     ' ドラゴンの発生を司るメソッド
     Private Function dragonGenerate() As Boolean
         ' ドラゴンは発生するか？
-        If isDragon = False AndAlso (buttonRow >= BUTTON_ROW - 1 OrElse isPaintButton(getIdxOfButton(buttonRow + 1, buttonColumn)) = True) Then
-            If buttonColumn >= BUTTON_COLUMN - 1 Then ' 範囲外
+        If isDragon = False AndAlso (isMaxLengeRow(row) OrElse isPaintButton(getIdxOfButton(buttonRow + 1, buttonColumn))) Then
+            If isMaxLengeColumn(column) Then ' 範囲外
                 maxLenge = True
                 Return False
             End If
@@ -223,7 +218,7 @@
 
         If isDragon = False Then
             buttonRow = buttonRow + 1
-        ElseIf buttonColumn >= BUTTON_COLUMN - 1 Then ' 範囲外
+        ElseIf isMaxLengeColumn(column) Then ' 範囲外
             maxLenge = True
             Return False
         Else
@@ -245,7 +240,7 @@
         End If
 
 
-        ButtonEn_Click() ' そのままクリックしたときの処理を呼べたのでそのまま
+        gameProcess() ' そのままクリックしたときの処理を呼べたのでそのまま
 
         If TextBox1.Text = "999" Then
             Me.FormBorderStyle = FormBorderStyle.None
@@ -260,7 +255,7 @@
 
 
     ' 数字の入力を確定された時
-    Private Sub ButtonEn_Click()
+    Private Sub gameProcess()
         Dim inputStr As String = TextBox1.Text
         If Not isLogicalInput(inputStr) Then '入力されているか、数字の論理チェックが通っているか
             Return
@@ -283,8 +278,6 @@
 
         End If
 
-
-        'TextBox1.Clear() ' テキストボックスを初期化
 
         If maxLenge = True Then ' 範囲外
             maxLenge = False
@@ -315,6 +308,7 @@
             If isDragon = False Then
                 buttonRow = buttonRow + 1
             ElseIf isMaxLengeColumn(column) Then ' 範囲外
+                maxLenge = True
                 Return
             Else
                 buttonColumn = buttonColumn + 1
@@ -329,7 +323,7 @@
             If isDragon = True Then
                 buttonColumn = dragonBtnColumn + 1
                 isDragon = False
-            ElseIf buttonColumn >= BUTTON_COLUMN - 1 Then ' 範囲外
+            ElseIf isMaxLengeColumn(column) Then ' 範囲外
                 maxLenge = True
                 Return
             Else
@@ -345,19 +339,22 @@
 
     End Sub
 
+    ' 渡された列数が最大列数であるか判定する
     Function isMaxLengeColumn(ByVal column As Integer) As Boolean
         if column >= BUTTON_COLUMN - 1 Then
-            maxLenge = True
             Return True
         End If
+        Return False
     End Function
 
+    ' 渡された行数が最大行数であるか判定する
     Function isMaxLengeRow(ByVal row As Integer) As Boolean
         if row >= BUTTON_ROW - 1 Then
-            maxLenge = True
             Return True
         End If
+        Return False
     End Function
+
 
     ' statusList系の操作------------------------------------------------------------------------------------------------------------------
     ' 指定したインデックスのStatusを返す
@@ -369,7 +366,7 @@
     Public Shared Sub addStatus(ByVal status As Status)
         SyncLock statusList.SyncRoot
             statusIdx = statusIdx + 1
-            If statusIdx < statusList.Count - 1 Then ' undoした状態か？そうなら上書き
+            If statusIdx < statusList.Count - 1 Then ' 現状指し示す先にListが存在するか(undoした状態か？そうなら上書き
                 statusList.RemoveRange(statusIdx, statusList.Count - statusIdx) ' redo先を上書きするため、それ以降をすべて削除
             End If
 
