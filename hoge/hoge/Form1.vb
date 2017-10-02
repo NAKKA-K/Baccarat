@@ -28,7 +28,6 @@
 
     ' undo
     Private Sub undoStatus()
-        Label4.Text = "add = " & statusIdx
         If statusIdx <= 0 Then ' undo先がない？
             ' 初期化
             buttonColumn = 0
@@ -61,8 +60,6 @@
     End Sub
     ' redo
     Private Sub redoStatus()
-        Label4.Text = "add = " & statusIdx
-
         If statusIdx >= statusList.Count - 1 Then ' redo先がない？
             Return
         End If
@@ -92,11 +89,9 @@
     Private Function isLogicalInput(ByVal inputNumStr As String) As Boolean
         If inputNumStr = "//" Then ' undo
             undoStatus()
-
             Return False
         ElseIf inputNumStr = "**" Then ' redo
             redoStatus()
-
             Return False
         ElseIf inputNumStr.Length = 3 AndAlso inputNumStr(2) Like "[+-.]" Then ' シンボル有、正常値
             numSymbol = inputNumStr(2)
@@ -208,7 +203,7 @@
 
     ' 2次元配列的に配置されるボタンのインデックスを、1次元配列のインデックスで返す
     Private Function getIdxOfButton(ByVal row As Integer, ByVal column As Integer) As Integer
-        Return column * BUTTON_ROW + row ' 00-0,10-1,20-2, 01-3,11-4,21-5, 02-6,12-7,22-8
+        Return (column * BUTTON_ROW) + row ' (列数 * 最大行数) + 行数
     End Function
 
 
@@ -319,8 +314,7 @@
         If dominateColor = COLOR_GREEN Then ' 中立
             If isDragon = False Then
                 buttonRow = buttonRow + 1
-            ElseIf buttonColumn >= BUTTON_COLUMN - 1 Then ' 範囲外
-                maxLenge = True
+            ElseIf isMaxLengeColumn(column) Then ' 範囲外
                 Return
             Else
                 buttonColumn = buttonColumn + 1
@@ -351,7 +345,19 @@
 
     End Sub
 
+    Function isMaxLengeColumn(ByVal column As Integer) As Boolean
+        if column >= BUTTON_COLUMN - 1 Then
+            maxLenge = True
+            Return True
+        End If
+    End Function
 
+    Function isMaxLengeRow(ByVal row As Integer) As Boolean
+        if row >= BUTTON_ROW - 1 Then
+            maxLenge = True
+            Return True
+        End If
+    End Function
 
     ' statusList系の操作------------------------------------------------------------------------------------------------------------------
     ' 指定したインデックスのStatusを返す
