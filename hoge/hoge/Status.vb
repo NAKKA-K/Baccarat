@@ -2,7 +2,8 @@
 Public Class Status
     ' ボタンの情報の格納形式
     Public Structure ButtonStatusStruct
-        Dim buttonColumn, buttonRow, color As Integer
+        Dim buttonColumn, buttonRow As Integer
+        Dim color As Color
         Dim gameStatus As String
     End Structure
 
@@ -33,7 +34,7 @@ Public Class Status
 
     ' 登録-------------------------------------------------------------------------------------------------------------------------------------
     ' ボタン系の情報登録
-    Public Sub setButtonStatus(ByVal buttonColumn As Integer, ByVal buttonRow As Integer, ByVal color As Integer, ByVal gameStatus As String)
+    Public Sub setButtonStatus(ByVal buttonColumn As Integer, ByVal buttonRow As Integer, ByVal color As Color, ByVal gameStatus As String)
         Me.buttonStatus.buttonColumn = buttonColumn
         Me.buttonStatus.buttonRow = buttonRow
         Me.buttonStatus.color = color
@@ -59,7 +60,7 @@ Public Class Status
     Public Function getButtonRow() As Integer
         Return Me.buttonStatus.buttonRow
     End Function
-    Public Function getColor() As Integer
+    Public Function getColor() As Color
         Return Me.buttonStatus.color
     End Function
     Public Function getGameStatus() As String

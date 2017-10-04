@@ -1,21 +1,21 @@
 ﻿Public Class Form1
-    Dim maxLenge As Boolean
+    Public Const BUTTON_ROW As Integer = 16
+    Public Const BUTTON_COLUMN As Integer = 32
 
+    Public Const COLOR_GREEN As Color = Color.Green
+    Public Const COLOR_RED As Color = Color.Red
+    Public Const COLOR_BLUE As Color = Color.Blue
+
+    Dim maxLenge As Boolean
     Dim numSymbol As Char = " "
     Dim gameStatus As String
-    Dim dominateColor As Integer = 0 ' その行を支配する色(赤、青)
+    Dim dominateColor As Color = COLOR_GREEN' その行を支配する色(赤、青)
     Dim isDragon As Boolean ' ドラゴン状態か？
     Dim buttonRow As Integer = -1
     Dim buttonColumn As Integer = 0
     Dim dragonBtnColumn As Integer
-    Dim color As Integer
+    Dim color As Color
 
-    Const COLOR_GREEN As Integer = 0
-    Const COLOR_RED As Integer = 1
-    Const COLOR_BLUE As Integer = 2
-
-    Public Const BUTTON_ROW As Integer = 16
-    Public Const BUTTON_COLUMN As Integer = 32
 
     Public Shared statusIdx As Integer = -1 ' 現在のStatus位置
     'Public Shared statusList As New ArrayList ' undo,redoの情報を保存する変数
@@ -28,7 +28,7 @@
             ' 初期化
             buttonColumn = 0
             buttonRow = -1
-            dominateColor = 0
+            dominateColor = COLOR_GREEN
             isDragon = False
             dragonBtnColumn = 0
             colorSet(DefaultBackColor, 0)
@@ -75,7 +75,7 @@
         ' 情報の初期化
         Dim buttonIdx As Integer = getIdxOfButton(buttonRow, buttonColumn)
         getButtonOfIdx(buttonIdx).Text = gameStatus ' 現状のマスにテキストを書き直して、次
-        colorSet(getChangedColor(color), buttonIdx) ' 現状のマスを塗り直して、次
+        colorSet(color, buttonIdx) ' 現状のマスを塗り直して、次
 
 
     End Sub
@@ -158,21 +158,6 @@
 
 
     ' 色に関する処理---------------------------------------------------------------------------------------------------------------------
-    ' 色数値に対応したColorを返す。
-    Public Function getChangedColor(ByVal colorNum As Integer) As Color
-        Select Case colorNum
-            Case COLOR_GREEN
-                Return Color.Green
-            Case COLOR_RED
-                Return Color.Red
-            Case COLOR_BLUE
-                Return Color.Blue
-            Case Else
-                Return DefaultBackColor
-        End Select
-    End Function
-
-
     ' 色の設定をまとめた
     Private Sub colorSet(ByVal color As Color, ByVal buttonIdx As Integer)
         getButtonOfIdx(buttonIdx).BackColor = color
@@ -263,20 +248,19 @@
             Return
         End If
 
-        Dim colorNum As Integer
         If inputStr(0) > inputStr(1) Then ' プレイヤーwin
             dominate(COLOR_RED)
-            colorNum = COLOR_RED
+            color = COLOR_RED
 
         ElseIf inputStr(0) < inputStr(1) Then ' バンカーwin
             dominate(COLOR_BLUE)
-            colorNum = COLOR_BLUE
+            color = COLOR_BLUE
 
         ElseIf inputStr(0) = inputStr(1) Then 'draw
             If dragonGenerate() = True Then
                 colorSet(Color.Green, getIdxOfButton(buttonRow, buttonColumn))
             End If
-            colorNum = COLOR_GREEN
+            color = COLOR_GREEN
 
         End If
 
@@ -292,7 +276,7 @@
 
         ' Statusを保存するために、各項目ごとにメソッドで登録
         Dim saveStatus As Status = New Status
-        saveStatus.setButtonStatus(buttonColumn, buttonRow, colorNum, gameStatus)
+        saveStatus.setButtonStatus(buttonColumn, buttonRow, color, gameStatus)
         saveStatus.setDominateColor(dominateColor)
         saveStatus.setDragon(isDragon, dragonBtnColumn)
         addStatus(saveStatus) ' statusListに作成したStatusを追加
@@ -305,7 +289,7 @@
     End Sub
 
     ' 赤と青の処理が同じだったため抽出
-    Private Sub dominate(ByVal colorNum As Integer)
+    Private Sub dominate(ByVal color As Color)
         If dominateColor = COLOR_GREEN Then ' 中立
             If isDragon = False Then
                 buttonRow = buttonRow + 1
@@ -336,8 +320,8 @@
         End If
 
 
-        colorSet(getChangedColor(colorNum), getIdxOfButton(buttonRow, buttonColumn))
-        dominateColor = colorNum
+        colorSet(color, getIdxOfButton(buttonRow, buttonColumn))
+        dominateColor = color
 
     End Sub
 
