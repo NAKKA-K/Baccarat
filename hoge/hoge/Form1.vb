@@ -16,15 +16,14 @@
     Dim dragonBtnColumn As Integer
     Dim color As Color
 
-    Public Shared statusIdx As Integer = -1 ' 現在のStatus位置
-    'Public Shared statusList As New ArrayList ' undo,redoの情報を保存する変数
-    Public Shared statusList As ArrayList = ArrayList.Synchronized(New ArrayList)
-
+    Dim listMgr As New StatusListMgr
+    Dim status As New Status
 
     ' Hangle系処理---------------------------------------------------------------------------------------------
     ' ロード時にフォーカスを設定する
     Private Sub focusTextBox(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        Me.ActiveControl = Me.TextBox1
+        'Me.ActiveControl = Me.TextBox1
+        TextBox1.Focus() 'フォーカスをbox1に
     End Sub
 
     ' テキストボックスを入力してエンターを押したときの処理
@@ -35,9 +34,6 @@
             Return
         End If
 
-
-        gameProcess() ' そのままクリックしたときの処理を呼べたのでそのまま
-
         If TextBox1.Text = "999" Then
             Me.FormBorderStyle = FormBorderStyle.None
             Me.WindowState = FormWindowState.Maximized
@@ -46,6 +42,8 @@
         ElseIf TextBox1.Text = "777" Then
             Me.Close()
         End If
+
+        gameProcess() ' そのままクリックしたときの処理を呼べたのでそのまま
         TextBox1.Clear()
     End Sub
 
@@ -182,7 +180,7 @@
             End Select
         Next
 
-        gameStatus = getGameStatus(inputNumStr)
+        status.setGameStatus(getGameStatus(inputNumStr))
 
         Return True
     End Function
@@ -238,17 +236,16 @@
     End Sub
 
     ' 次に塗る場所が、既に塗られているか？
-    Private Function isPaintButton(ByVal buttonIdx As Integer) As Boolean
-        If getButtonOfIdx(buttonIdx).BackColor = Color.Green OrElse
-        getButtonOfIdx(buttonIdx).BackColor = Color.Red OrElse
-        getButtonOfIdx(buttonIdx).BackColor = Color.Blue Then
+    Private Function isPaintButton(ByVal button As Button) As Boolean
+        If button.BackColor = Color.Green OrElse
+        button.BackColor = Color.Red OrElse
+        button.BackColor = Color.Blue Then
 
             Return True
         End If
 
         Return False
     End Function
-
 
 
     ' ボタン系処理------------------------------------------------------------------------------------------------------------
@@ -266,24 +263,28 @@
     ' ドラゴンの発生を司るメソッド
     Private Function dragonGenerate() As Boolean
         ' ドラゴンは発生するか？
-        If isDragon = False AndAlso (isMaxLengeRow(buttonRow) OrElse isPaintButton(getIdxOfButton(buttonRow + 1, buttonColumn))) Then
+        Dim buttonColumn As Integer = status.getButtonColumn()
+        Dim buttonRow As Integer = status.getButtonRow()
+
+        Button btn = getButtonOfIdx(getIdxOfButton(buttonRow + 1, buttonColumn))
+        If status.getIsDragon() = False AndAlso (isMaxLengeRow(buttonRow) OrElse isPaintButton(btn)) Then
             If isMaxLengeColumn(buttonColumn) Then ' 範囲外
                 maxLenge = True
                 Return False
             End If
 
-            isDragon = True
-            dragonBtnColumn = buttonColumn
+            status.setIsDragon(True)
+            status.setDragonBtnColumn(buttonColumn) ' ドラゴン発生前の列を保存
         End If
 
 
-        If isDragon = False Then
-            buttonRow = buttonRow + 1
+        If status.getIsDragon() = False Then
+            status.setButtonRow(buttonRow + 1)
         ElseIf isMaxLengeColumn(buttonColumn) Then ' 範囲外
             maxLenge = True
             Return False
         Else
-            buttonColumn = buttonColumn + 1
+            status.setButtonColumn(buttonColumn + 1)
         End If
 
         Return True
@@ -293,38 +294,41 @@
 
     ' 赤と青の処理が同じだったため抽出
     Private Sub dominate(ByVal color As Color)
-        If dominateColor = COLOR_GREEN Then ' 中立
-            If isDragon = False Then
-                buttonRow = buttonRow + 1
+        Dim buttonColumn As Integer = status.getButtonColumn()
+        Dim buttonRow As Integer = status.getButtonRow()
+        
+        If status.getDominateColor() = COLOR_GREEN Then ' 中立
+            If status.getIsDragon() = False Then
+                status.setButtonRow(buttonRow + 1)
             ElseIf isMaxLengeColumn(buttonColumn) Then ' 範囲外
                 maxLenge = True
                 Return
             Else
-                buttonColumn = buttonColumn + 1
+                status.setButtonColumn(buttonColumn + 1)
             End If
 
-        ElseIf dominateColor = colorNum Then ' 同じ色の支配
+        ElseIf status.getDominateColor() = color Then ' 同じ色の支配
             If dragonGenerate() = False Then
                 Return
             End If
 
         Else ' 違う色の支配
-            If isDragon = True Then
-                buttonColumn = dragonBtnColumn + 1
-                isDragon = False
+            If status.getIsDragon() = True Then
+                status.setButtonColumn(status.getDragonBtnColumn() + 1)
+                status.setIsDragon(False)
             ElseIf isMaxLengeColumn(buttonColumn) Then ' 範囲外
                 maxLenge = True
                 Return
             Else
-                buttonColumn = buttonColumn + 1
+                status.setButtonColumn(buttonColumn + 1)
             End If
-            buttonRow = 0
+            status.setButtonRow(0)
 
         End If
 
 
-        colorSet(color, getIdxOfButton(buttonRow, buttonColumn))
-        dominateColor = color
+        colorSet(status.getColor(), getIdxOfButton(status.getButtonRow(), status.getButtonColumn()))
+        status.setDominateColor(status.getColor())
 
     End Sub
 
@@ -343,29 +347,6 @@
         End If
         Return False
     End Function
-
-
-    ' statusList系の操作------------------------------------------------------------------------------------------------------------------
-    ' 指定したインデックスのStatusを返す
-    Public Shared Function getStatus(ByVal statusIdx As Integer) As Status
-        Return statusList.Item(statusIdx)
-    End Function
-
-    ' 引数のStatusをリストに登録
-    Public Shared Sub addStatus(ByVal status As Status)
-        SyncLock statusList.SyncRoot
-            statusIdx = statusIdx + 1
-            If statusIdx < getMaxIdx() Then ' 現状指し示す先にListが存在するか(undoした状態か？そうなら上書き
-                statusList.RemoveRange(statusIdx, statusList.Count - statusIdx) ' redo先を上書きするため、それ以降をすべて削除
-            End If
-
-            statusList.Add(status)
-
-        End SyncLock
-
-    End Sub
-
-
 
 
 
@@ -392,39 +373,3 @@
 
 End Class
 
-
-
-
-
-
-
-
-Public Class StatusListMgr
-    Public Shared statusList As ArrayList = ArrayList.Synchronized(New ArrayList)
-
-    Public Shared statusIdx As Integer = -1 ' 現在のStatus位置
-
-    Public Shared Sub addStatus(ByVal status As Status)
-        SyncLock statusList.SyncRoot
-            statusIdx = statusIdx + 1
-            If statusIdx < getMaxIdx() Then ' 現状指し示す先にListが存在するか(undoした状態か？そうなら上書き
-                statusList.RemoveRange(statusIdx, statusList.Count - statusIdx) ' redo先を上書きするため、それ以降をすべて削除
-            End If
-
-            statusList.Add(status)
-        End SyncLock
-    End Sub
-
-
-    Public Function getStatus(ByVal idx As Integer = statusIdx) As Status
-        Return statusList.Item(idx)
-    End Function
-
-    Public Function getStatusIdx() As Integer
-        Return statusIdx
-    End Function    
-
-    Public Function getMaxIdx() As Integer
-        Return statusList.Count
-    End Function
-End Class

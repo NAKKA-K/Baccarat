@@ -1,4 +1,3 @@
-' undo,redo用、必要なすべての情報の格納形式
 Public Class Status
     ' ボタンの情報の格納形式
     Public Structure ButtonStatusStruct
@@ -41,10 +40,6 @@ Public Class Status
         Me.buttonStatus.gameStatus = gameStatus
     End Sub
 
-    ' 支配情報の登録
-    Public Sub setDominateColor(ByVal dominateColor As Integer)
-        Me.dominateColor = dominateColor
-    End Sub
 
     ' ドラゴン系の情報登録
     Public Sub setDragon(ByVal isDragon As Boolean, ByVal dragonBtnColumn As String)
@@ -52,6 +47,30 @@ Public Class Status
         Me.dragonBtnColumn = dragonBtnColumn
     End Sub
 
+
+    Public Sub setButtonColumn(buttonColumn As Variant)
+        Me.buttonStatus.buttonColumn = buttonColumn
+    End Sub
+    Public Sub setButtonRow(buttonRow As Variant)
+        Me.buttonStatus.buttonRow = buttonRow
+    End Sub
+    Public Sub setColor(color As Variant)
+        Me.buttonStatus.color = color
+    End Sub
+    Public Sub setGameStatus(gameStatus As Variant)
+        Me.buttonStatus.gameStatus = gameStatus
+    End Sub
+
+    Public Sub setDominateColor(ByVal dominateColor As Integer) ' 支配情報の登録
+        Me.dominateColor = dominateColor
+    End Sub
+
+    Public Sub setIsDragon(isDragon As Variant)
+        Me.isDragon = isDragon
+    End Sub
+    Public Sub setDragonBtnColumn(dragonBtnColumn As Variant)
+        Me.dragonBtnColumn = dragonBtnColumn
+    End Sub
 
     ' 取得-----------------------------------------------------------------------------------------------------------------------------------
     Public Function getButtonColumn() As Integer
