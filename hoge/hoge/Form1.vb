@@ -16,12 +16,85 @@
     Dim dragonBtnColumn As Integer
     Dim color As Color
 
-
     Public Shared statusIdx As Integer = -1 ' 現在のStatus位置
     'Public Shared statusList As New ArrayList ' undo,redoの情報を保存する変数
     Public Shared statusList As ArrayList = ArrayList.Synchronized(New ArrayList)
 
 
+    ' Hangle系処理---------------------------------------------------------------------------------------------
+    ' ロード時にフォーカスを設定する
+    Private Sub focusTextBox(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        Me.ActiveControl = Me.TextBox1
+    End Sub
+
+    ' テキストボックスを入力してエンターを押したときの処理
+    Private Sub pressEnterTextBox(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles TextBox1.KeyPress
+        If e.KeyChar = ChrW(Keys.Enter) Then
+            e.Handled = True 'Enterキーでビープ音が鳴らないようにする
+        Else
+            Return
+        End If
+
+
+        gameProcess() ' そのままクリックしたときの処理を呼べたのでそのまま
+
+        If TextBox1.Text = "999" Then
+            Me.FormBorderStyle = FormBorderStyle.None
+            Me.WindowState = FormWindowState.Maximized
+        ElseIf TextBox1.Text = "888" Then
+            Application.Restart()
+        ElseIf TextBox1.Text = "777" Then
+            Me.Close()
+        End If
+        TextBox1.Clear()
+    End Sub
+
+
+    ' 数字の入力を確定された時
+    Private Sub gameProcess()
+        Dim inputStr As String = TextBox1.Text
+        If Not isLogicalInput(inputStr) Then '入力されているか、数字の論理チェックが通っているか
+            Return
+        End If
+
+        If inputStr(0) > inputStr(1) Then ' プレイヤーwin
+            dominate(COLOR_RED)
+            color = COLOR_RED
+
+        ElseIf inputStr(0) < inputStr(1) Then ' バンカーwin
+            dominate(COLOR_BLUE)
+            color = COLOR_BLUE
+
+        ElseIf inputStr(0) = inputStr(1) Then 'draw
+            If dragonGenerate() = True Then
+                colorSet(Color.Green, getIdxOfButton(buttonRow, buttonColumn))
+            End If
+            color = COLOR_GREEN
+
+        End If
+
+
+        If maxLenge = True Then ' 範囲外
+            maxLenge = False
+            Return
+        End If
+
+
+        getButtonOfIdx(getIdxOfButton(buttonRow, buttonColumn)).Text = gameStatus
+
+
+        ' Statusを保存するために、各項目ごとにメソッドで登録
+        Dim saveStatus As Status = New Status
+        saveStatus.setButtonStatus(buttonColumn, buttonRow, color, gameStatus)
+        saveStatus.setDominateColor(dominateColor)
+        saveStatus.setDragon(isDragon, dragonBtnColumn)
+        addStatus(saveStatus) ' statusListに作成したStatusを追加
+
+    End Sub
+
+
+
+    ' ゲームの進捗に関するメソッド-----------------------------------------------------------------------------
     ' undo
     Private Sub undoStatus()
         If statusIdx <= 0 Then ' undo先がない？
@@ -54,6 +127,7 @@
         gameStatus = statusTmp.getGameStatus()
 
     End Sub
+
     ' redo
     Private Sub redoStatus()
         If statusIdx >= statusList.Count - 1 Then ' redo先がない？
@@ -217,77 +291,6 @@
 
 
 
-
-    ' テキストボックスを入力してエンターを押したときの処理
-    Private Sub pressEnterTextBox(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles TextBox1.KeyPress
-        If e.KeyChar = ChrW(Keys.Enter) Then
-            e.Handled = True 'Enterキーでビープ音が鳴らないようにする
-        Else
-            Return
-        End If
-
-
-        gameProcess() ' そのままクリックしたときの処理を呼べたのでそのまま
-
-        If TextBox1.Text = "999" Then
-            Me.FormBorderStyle = FormBorderStyle.None
-            Me.WindowState = FormWindowState.Maximized
-        ElseIf TextBox1.Text = "888" Then
-            Application.Restart()
-        ElseIf TextBox1.Text = "777" Then
-            Me.Close()
-        End If
-        TextBox1.Clear()
-    End Sub
-
-
-    ' 数字の入力を確定された時
-    Private Sub gameProcess()
-        Dim inputStr As String = TextBox1.Text
-        If Not isLogicalInput(inputStr) Then '入力されているか、数字の論理チェックが通っているか
-            Return
-        End If
-
-        If inputStr(0) > inputStr(1) Then ' プレイヤーwin
-            dominate(COLOR_RED)
-            color = COLOR_RED
-
-        ElseIf inputStr(0) < inputStr(1) Then ' バンカーwin
-            dominate(COLOR_BLUE)
-            color = COLOR_BLUE
-
-        ElseIf inputStr(0) = inputStr(1) Then 'draw
-            If dragonGenerate() = True Then
-                colorSet(Color.Green, getIdxOfButton(buttonRow, buttonColumn))
-            End If
-            color = COLOR_GREEN
-
-        End If
-
-
-        If maxLenge = True Then ' 範囲外
-            maxLenge = False
-            Return
-        End If
-
-
-        getButtonOfIdx(getIdxOfButton(buttonRow, buttonColumn)).Text = gameStatus
-
-
-        ' Statusを保存するために、各項目ごとにメソッドで登録
-        Dim saveStatus As Status = New Status
-        saveStatus.setButtonStatus(buttonColumn, buttonRow, color, gameStatus)
-        saveStatus.setDominateColor(dominateColor)
-        saveStatus.setDragon(isDragon, dragonBtnColumn)
-        addStatus(saveStatus) ' statusListに作成したStatusを追加
-
-    End Sub
-
-    Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        ' ロード時にフォーカスを設定する
-        Me.ActiveControl = Me.TextBox1
-    End Sub
-
     ' 赤と青の処理が同じだったため抽出
     Private Sub dominate(ByVal color As Color)
         If dominateColor = COLOR_GREEN Then ' 中立
@@ -361,6 +364,11 @@
         End SyncLock
 
     End Sub
+
+
+
+
+
 
 
 
