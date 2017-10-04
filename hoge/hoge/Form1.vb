@@ -2,9 +2,10 @@
     Public Const BUTTON_ROW As Integer = 16
     Public Const BUTTON_COLUMN As Integer = 32
 
-    Public Const COLOR_GREEN As Color = Color.Green
-    Public Const COLOR_RED As Color = Color.Red
-    Public Const COLOR_BLUE As Color = Color.Blue
+    'TODO:constが指定できるのは組み込み型や列挙型だけ(クラスなどは使えない)
+    ReadOnly Property COLOR_GREEN As Color = Color.Green
+    ReadOnly Property COLOR_RED As Color = Color.Red
+    ReadOnly Property COLOR_BLUE As Color = Color.Blue
 
     Dim maxLenge As Boolean
     Dim numSymbol As Char = " "

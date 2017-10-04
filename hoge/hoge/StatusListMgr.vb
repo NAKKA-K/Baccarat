@@ -13,8 +13,8 @@ Public Class StatusListMgr
         End SyncLock
     End Sub
 
-
-    Public Function getStatus(ByVal idx As Integer = statusIdx) As Status
+    'TODO:デフォルト引数に変数は使えない？
+    Public Function getStatus(Optional ByVal idx As Integer = statusIdx) As Status
         Return statusList.Item(idx)
     End Function
 

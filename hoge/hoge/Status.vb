@@ -1,25 +1,23 @@
 Public Class Status
-    ' ボタンの情報の格納形式
-    Public Structure ButtonStatusStruct
-        Dim buttonColumn, buttonRow As Integer
-        Dim color As Color
-        Dim gameStatus As String
-    End Structure
+    Property buttonColumn As Integer
+    Property buttonRow As Integer
+    Property color As Color
+    Property gameStatus As String
 
-    Dim buttonStatus As ButtonStatusStruct
-    Dim dominateColor As Integer
-    Dim isDragon As Boolean
-    Dim dragonBtnColumn As Integer
+    Property dominateColor As Color
+    Property isDragon As Boolean
+    Property dragonBtnColumn As Integer
 
     Public Sub New()
         initStatus()
     End Sub
 
     Public Sub initStatus()
-        buttonStatus.buttonColumn = 0
-        buttonStatus.buttonRow = -1
-        buttonStatus.gameStatus = ""
-        dominateColor = 0
+        buttonColumn = 0
+        buttonRow = -1
+        color = Control.DefaultBackColor
+        gameStatus = ""
+        dominateColor = Color.Green
         isDragon = False
         dragonBtnColumn = 0
 
@@ -34,12 +32,16 @@ Public Class Status
     ' 登録-------------------------------------------------------------------------------------------------------------------------------------
     ' ボタン系の情報登録
     Public Sub setButtonStatus(ByVal buttonColumn As Integer, ByVal buttonRow As Integer, ByVal color As Color, ByVal gameStatus As String)
-        Me.buttonStatus.buttonColumn = buttonColumn
-        Me.buttonStatus.buttonRow = buttonRow
-        Me.buttonStatus.color = color
-        Me.buttonStatus.gameStatus = gameStatus
+        Me.buttonColumn = buttonColumn
+        Me.buttonRow = buttonRow
+        Me.color = color
+        Me.gameStatus = gameStatus
     End Sub
 
+    ' 支配情報の登録
+    Public Sub setDominateColor(ByVal dominateColor As Color)
+        Me.dominateColor = dominateColor
+    End Sub
 
     ' ドラゴン系の情報登録
     Public Sub setDragon(ByVal isDragon As Boolean, ByVal dragonBtnColumn As String)
@@ -47,55 +49,5 @@ Public Class Status
         Me.dragonBtnColumn = dragonBtnColumn
     End Sub
 
-
-    Public Sub setButtonColumn(buttonColumn As Variant)
-        Me.buttonStatus.buttonColumn = buttonColumn
-    End Sub
-    Public Sub setButtonRow(buttonRow As Variant)
-        Me.buttonStatus.buttonRow = buttonRow
-    End Sub
-    Public Sub setColor(color As Variant)
-        Me.buttonStatus.color = color
-    End Sub
-    Public Sub setGameStatus(gameStatus As Variant)
-        Me.buttonStatus.gameStatus = gameStatus
-    End Sub
-
-    Public Sub setDominateColor(ByVal dominateColor As Integer) ' 支配情報の登録
-        Me.dominateColor = dominateColor
-    End Sub
-
-    Public Sub setIsDragon(isDragon As Variant)
-        Me.isDragon = isDragon
-    End Sub
-    Public Sub setDragonBtnColumn(dragonBtnColumn As Variant)
-        Me.dragonBtnColumn = dragonBtnColumn
-    End Sub
-
-    ' 取得-----------------------------------------------------------------------------------------------------------------------------------
-    Public Function getButtonColumn() As Integer
-        Return Me.buttonStatus.buttonColumn
-    End Function
-    Public Function getButtonRow() As Integer
-        Return Me.buttonStatus.buttonRow
-    End Function
-    Public Function getColor() As Color
-        Return Me.buttonStatus.color
-    End Function
-    Public Function getGameStatus() As String
-        Return Me.buttonStatus.gameStatus
-    End Function
-
-
-    Public Function getDominateColor() As Integer
-        Return Me.dominateColor
-    End Function
-
-    Public Function getIsDragon() As Boolean
-        Return Me.isDragon
-    End Function
-    Public Function getDragonBtnColumn() As Integer
-        Return Me.dragonBtnColumn
-    End Function
 
 End Class
