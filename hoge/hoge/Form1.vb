@@ -1,13 +1,14 @@
 ﻿Public Class Form1
     Dim maxLenge As Boolean
 
-    Dim gameStatus As String
     Dim numSymbol As Char = " "
+    Dim gameStatus As String
     Dim dominateColor As Integer = 0 ' その行を支配する色(赤、青)
     Dim isDragon As Boolean ' ドラゴン状態か？
     Dim buttonRow As Integer = -1
     Dim buttonColumn As Integer = 0
     Dim dragonBtnColumn As Integer
+    Dim color As Integer
 
     Const COLOR_GREEN As Integer = 0
     Const COLOR_RED As Integer = 1
@@ -68,15 +69,16 @@
         dominateColor = statusTmp.getDominateColor()
         isDragon = statusTmp.getIsDragon()
         dragonBtnColumn = statusTmp.getDragonBtnColumn()
+        gameStatus = statusTmp.getGameStatus()
+        color = statusTmp.getColor()
 
         ' 情報の初期化
         Dim buttonIdx As Integer = getIdxOfButton(buttonRow, buttonColumn)
-        getButtonOfIdx(buttonIdx).Text = statusTmp.getGameStatus() ' 現状のマスにテキストを書き直して、次
-        colorSet(getChangedColor(statusTmp.getColor()), buttonIdx) ' 現状のマスを塗り直して、次
+        getButtonOfIdx(buttonIdx).Text = gameStatus ' 現状のマスにテキストを書き直して、次
+        colorSet(getChangedColor(color), buttonIdx) ' 現状のマスを塗り直して、次
 
 
     End Sub
-
 
 
     ' textbox内の処理---------------------------------------------------------------------------------------------------------------------
@@ -366,7 +368,7 @@
     Public Shared Sub addStatus(ByVal status As Status)
         SyncLock statusList.SyncRoot
             statusIdx = statusIdx + 1
-            If statusIdx < statusList.Count - 1 Then ' 現状指し示す先にListが存在するか(undoした状態か？そうなら上書き
+            If statusIdx < getMaxIdx() Then ' 現状指し示す先にListが存在するか(undoした状態か？そうなら上書き
                 statusList.RemoveRange(statusIdx, statusList.Count - statusIdx) ' redo先を上書きするため、それ以降をすべて削除
             End If
 
@@ -396,4 +398,41 @@
 
     End Sub
 
+End Class
+
+
+
+
+
+
+
+
+Public Class StatusListMgr
+    Public Shared statusList As ArrayList = ArrayList.Synchronized(New ArrayList)
+
+    Public Shared statusIdx As Integer = -1 ' 現在のStatus位置
+
+    Public Shared Sub addStatus(ByVal status As Status)
+        SyncLock statusList.SyncRoot
+            statusIdx = statusIdx + 1
+            If statusIdx < getMaxIdx() Then ' 現状指し示す先にListが存在するか(undoした状態か？そうなら上書き
+                statusList.RemoveRange(statusIdx, statusList.Count - statusIdx) ' redo先を上書きするため、それ以降をすべて削除
+            End If
+
+            statusList.Add(status)
+        End SyncLock
+    End Sub
+
+
+    Public Function getStatus(ByVal idx As Integer = statusIdx) As Status
+        Return statusList.Item(idx)
+    End Function
+
+    Public Function getStatusIdx() As Integer
+        Return statusIdx
+    End Function    
+
+    Public Function getMaxIdx() As Integer
+        Return statusList.Count
+    End Function
 End Class

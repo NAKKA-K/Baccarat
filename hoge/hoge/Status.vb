@@ -1,16 +1,35 @@
-
 ' undo,redo用、必要なすべての情報の格納形式
 Public Class Status
     ' ボタンの情報の格納形式
     Public Structure ButtonStatusStruct
-        Public buttonColumn, buttonRow, color As Integer
-        Public gameStatus As String
+        Dim buttonColumn, buttonRow, color As Integer
+        Dim gameStatus As String
     End Structure
 
-    Public buttonStatus As ButtonStatusStruct
-    Public dominateColor As Integer
-    Public isDragon As Boolean
-    Public dragonBtnColumn As Integer
+    Dim buttonStatus As ButtonStatusStruct
+    Dim dominateColor As Integer
+    Dim isDragon As Boolean
+    Dim dragonBtnColumn As Integer
+
+    Public Sub New()
+        initStatus()
+    End Sub
+
+    Public Sub initStatus()
+        buttonStatus.buttonColumn = 0
+        buttonStatus.buttonRow = -1
+        buttonStatus.gameStatus = ""
+        dominateColor = 0
+        isDragon = False
+        dragonBtnColumn = 0
+
+        ' undoのメソッド自身でやってもらう
+        ' colorSet(DefaultBackColor, 0)
+        ' getButtonOfIdx(0).Text = ""
+        ' statusIdx = -1
+
+    End Sub
+
 
     ' 登録-------------------------------------------------------------------------------------------------------------------------------------
     ' ボタン系の情報登録
