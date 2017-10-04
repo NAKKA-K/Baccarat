@@ -58,17 +58,17 @@
 
         If inputStr(0) > inputStr(1) Then ' プレイヤーwin
             dominate(COLOR_RED)
-            color = COLOR_RED
+            status.color = COLOR_RED
 
         ElseIf inputStr(0) < inputStr(1) Then ' バンカーwin
             dominate(COLOR_BLUE)
-            color = COLOR_BLUE
+            status.color = COLOR_BLUE
 
         ElseIf inputStr(0) = inputStr(1) Then 'draw
             If dragonGenerate() = True Then
-                colorSet(Color.Green, getIdxOfButton(buttonRow, buttonColumn))
+                colorSet(Color.Green, getIdxOfButton(status.buttonRow, status.buttonColumn))
             End If
-            color = COLOR_GREEN
+            status.color = COLOR_GREEN
 
         End If
 
@@ -79,7 +79,7 @@
         End If
 
 
-        getButtonOfIdx(getIdxOfButton(buttonRow, buttonColumn)).Text = gameStatus
+        getButtonOfIdx(getIdxOfButton(status.buttonRow, status.buttonColumn)).Text = gameStatus
 
 
         ' Statusを保存するために、各項目ごとにメソッドで登録
@@ -181,7 +181,7 @@
             End Select
         Next
 
-        status.setGameStatus(getGameStatus(inputNumStr))
+        status.gameStatus = getGameStatus(inputNumStr)
 
         Return True
     End Function
@@ -264,18 +264,16 @@
     ' ドラゴンの発生を司るメソッド
     Private Function dragonGenerate() As Boolean
         ' ドラゴンは発生するか？
-        Dim buttonColumn As Integer = status.getButtonColumn()
-        Dim buttonRow As Integer = status.getButtonRow()
+        Dim btn As Button = getButtonOfIdx(getIdxOfButton(status.buttonRow + 1, status.buttonColumn))
 
-        Button btn = getButtonOfIdx(getIdxOfButton(buttonRow + 1, buttonColumn))
-        If status.getIsDragon() = False AndAlso (isMaxLengeRow(buttonRow) OrElse isPaintButton(btn)) Then
+        If status.isDragon = False AndAlso (isMaxLengeRow(buttonRow) OrElse isPaintButton(btn)) Then
             If isMaxLengeColumn(buttonColumn) Then ' 範囲外
                 maxLenge = True
                 Return False
             End If
 
-            status.setIsDragon(True)
-            status.setDragonBtnColumn(buttonColumn) ' ドラゴン発生前の列を保存
+            status.isDragon = True
+            status.dragonBtnColumn = buttonColumn ' ドラゴン発生前の列を保存
         End If
 
 
