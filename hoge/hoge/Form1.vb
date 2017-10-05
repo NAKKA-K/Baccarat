@@ -1,12 +1,4 @@
 ﻿Public Class Form1
-    Public Const BUTTON_ROW As Integer = 16
-    Public Const BUTTON_COLUMN As Integer = 32
-
-    ReadOnly Property COLOR_GREEN As Color = Color.Green
-    ReadOnly Property COLOR_RED As Color = Color.Red
-    ReadOnly Property COLOR_BLUE As Color = Color.Blue
-    'TODO:constが指定できるのは組み込み型や列挙型だけ(クラスなどは使えない)
-
     Dim maxLenge As Boolean
     Dim numSymbol As Char = " "
 
@@ -50,18 +42,18 @@
         End If
 
         If inputStr(0) > inputStr(1) Then ' プレイヤーwin
-            dominate(COLOR_RED)
-            status.color = COLOR_RED
+            dominate(Color.Red)
+            status.color = Color.Red
 
         ElseIf inputStr(0) < inputStr(1) Then ' バンカーwin
-            dominate(COLOR_BLUE)
-            status.color = COLOR_BLUE
+            dominate(Color.Blue)
+            status.color = Color.Blue
 
         ElseIf inputStr(0) = inputStr(1) Then 'draw
             If dragonGenerate() = True Then
-                colorSet(Color.Green, getIdxOfButton(status.buttonRow, status.buttonColumn))
+                colorSet(Color.Green, status.getIdxOfButton())
             End If
-            status.color = COLOR_GREEN
+            status.color = Color.Green
 
         End If
 
@@ -72,7 +64,7 @@
         End If
 
 
-        getButtonOfIdx(getIdxOfButton(status.buttonRow, status.buttonColumn)).Text = status.gameStatus
+        getButtonOfIdx(status.getIdxOfButton()).Text = status.gameStatus
 
 
         ' Statusを保存するために、各項目ごとにメソッドで登録
@@ -98,7 +90,6 @@
             status = tmpStatus
         End If
     End Sub
-
 
 
     ' textbox内の処理---------------------------------------------------------------------------------------------------------------------
@@ -204,16 +195,11 @@
         Return Me.Controls("Button" & buttonIdx.ToString)
     End Function
 
-    ' 2次元配列的に配置されるボタンのインデックスを、1次元配列のインデックスで返す
-    Private Function getIdxOfButton(ByVal row As Integer, ByVal column As Integer) As Integer
-        Return (column * BUTTON_ROW) + row ' (列数 * 最大行数) + 行数
-    End Function
-
 
     ' ドラゴンの発生を司るメソッド
     Private Function dragonGenerate() As Boolean
         ' ドラゴンは発生するか？
-        Dim btn As Button = getButtonOfIdx(getIdxOfButton(status.buttonRow + 1, status.buttonColumn))
+        Dim btn As Button = getButtonOfIdx(status.getIdxOfButton(status.buttonRow + 1, status.buttonColumn))
 
         If status.isDragon = False AndAlso (isMaxLengeRow(status.buttonRow) OrElse isPaintButton(btn)) Then
             If isMaxLengeColumn(status.buttonColumn) Then ' 範囲外
@@ -242,7 +228,7 @@
 
     ' 赤と青の処理が同じだったため抽出
     Private Sub dominate(ByVal color As Color)
-        If status.dominateColor = COLOR_GREEN Then ' 中立
+        If status.dominateColor = Color.Green Then ' 中立
             If status.isDragon = False Then
                 status.buttonRow = status.buttonRow + 1
             ElseIf isMaxLengeColumn(status.buttonColumn) Then ' 範囲外
@@ -272,14 +258,14 @@
         End If
 
 
-        colorSet(status.color, getIdxOfButton(status.buttonRow, status.buttonColumn))
+        colorSet(status.color, status.getIdxOfButton())
         status.dominateColor = status.color
 
     End Sub
 
     ' 渡された列数が最大列数であるか判定する
     Function isMaxLengeColumn(ByVal column As Integer) As Boolean
-        If column >= BUTTON_COLUMN - 1 Then
+        If column >= Status.BUTTON_COLUMN - 1 Then
             Return True
         End If
         Return False
@@ -287,7 +273,7 @@
 
     ' 渡された行数が最大行数であるか判定する
     Function isMaxLengeRow(ByVal row As Integer) As Boolean
-        If row >= BUTTON_ROW - 1 Then
+        If row >= Status.BUTTON_ROW - 1 Then
             Return True
         End If
         Return False

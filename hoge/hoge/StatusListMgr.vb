@@ -43,10 +43,9 @@ Public Class StatusListMgr
         End If
 
         ' 情報の初期化(戻る前の処理)
-        Dim buttonIdx As Integer = getIdxOfButton(getStatus(statuIdx).buttonRow, getStatus(statusIdx).buttonColumn)
-        ' TODO:Formの内容をここからいじれないのでは？
-        colorSet(DefaultBackColor, buttonIdx)
-        getButtonOfIdx(buttonIdx).Text = ""
+        Dim buttonIdx As Integer = getStatus(statusIdx).getIdxOfButton()
+        getFormButton(buttonIdx).BackColor = Control.DefaultBackColor
+        getFormButton(buttonIdx).Text = ""
 
         statusIdx = statusIdx - 1
         Return getStatus(statusIdx)
@@ -63,11 +62,17 @@ Public Class StatusListMgr
         Dim statusTmp As Status = getStatus(statusIdx)
 
         ' 情報の初期化
-        Dim buttonIdx As Integer = getIdxOfButton(statusTmp.buttonRow, statusTmp.buttonColumn)
-        getButtonOfIdx(buttonIdx).Text = statusTmp.gameStatus ' 現状のマスにテキストを書き直して、次
-        colorSet(statuTmp.color, buttonIdx) ' 現状のマスを塗り直して、次
+        Dim buttonIdx As Integer = statusTmp.getIdxOfButton()
+        getFormButton(buttonIdx).Text = statusTmp.gameStatus ' 現状のマスにテキストを書き直して、次
+        getFormButton(buttonIdx).BackColor = statusTmp.color ' 現状のマスを塗り直して、次
 
         Return statusTmp
+    End Function
+
+
+    ' Form1のボタン取得するメソッド
+    Private Shared Function getFormButton(ByVal buttonIdx As Integer) As Button
+        Return Form1.Controls("Button" & buttonIdx.ToString)
     End Function
 
 End Class
