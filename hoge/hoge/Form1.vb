@@ -85,19 +85,20 @@
     ' ゲームの進捗に関するメソッド-----------------------------------------------------------------------------
     ' undo
     Private Sub undoStatus()
-        Dim tmpStatus As Status = listMgr.undo()
-        If Not tmpStatus = Null Then
+        Dim tmpStatus As Status = listMgr.undoStatus()
+        If Not IsNothing(tmpStatus) Then
             status = tmpStatus
         End If
     End Sub
 
     ' redo
     Private Sub redoStatus()
-        Dim tmpStatus As Status = listMgr.redo()
-        If Not tmpStatus = Null Then
+        Dim tmpStatus As Status = listMgr.redoStatus()
+        If Not IsNothing(tmpStatus) Then
             status = tmpStatus
         End If
     End Sub
+
 
 
     ' textbox内の処理---------------------------------------------------------------------------------------------------------------------
@@ -172,6 +173,8 @@
                 Return "⑧"
             Case "9"
                 Return "⑨"
+            Case Else
+                Return numChar
         End Select
     End Function
 
@@ -270,7 +273,7 @@
 
 
         colorSet(status.color, getIdxOfButton(status.buttonRow, status.buttonColumn))
-        status.setDominateColor = status.color
+        status.dominateColor = status.color
 
     End Sub
 

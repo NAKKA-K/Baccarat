@@ -3,49 +3,44 @@ Public Class StatusListMgr
     Dim statusIdx As Integer = -1 ' 現在のStatus位置
 
     Public Sub New()
-        'statusList.add(New Status)
+        statusList.Add(New Status)
         ' TODO:クラスを作成した時点で初期値のStatusを追加しておく。そうすることでundoをしたときにlistの0番目をそのまま使用することができる。
     End Sub
 
 
     Public Sub addStatus(ByVal status As Status)
         SyncLock statusList.SyncRoot
-            statusIdx = statusIdx + 1
-            If statusIdx < statusList.Count -1 Then ' 現状指し示す先にListが存在するか(undoした状態か？そうなら上書き
-                statusList.RemoveRange(statusIdx, statusList.Count - statusIdx) ' redo先を上書きするため、それ以降をすべて削除
+            If statusIdx < getListEndIndex() Then ' 現状指し示す先にListが存在するか(undoした状態か？そうなら上書き
+                statusList.RemoveRange(statusIdx + 1, getListEndIndex() - statusIdx) ' redo先を上書きするため、それ以降をすべて削除
             End If
 
             statusList.Add(status)
+            statusIdx = statusIdx + 1
         End SyncLock
     End Sub
 
     'TODO:デフォルト引数に変数は使えない？
-    Public Function getStatus(Optional ByVal idx As Integer = statusIdx) As Status
+    Public Function getStatus(ByVal idx As Integer) As Status
         Return statusList.Item(idx)
     End Function
 
     Public Function getStatusIdx() As Integer
         Return statusIdx
-    End Function    
+    End Function
 
-    Public Function getMaxIdx() As Integer
+    Public Function getCount() As Integer
         Return statusList.Count
     End Function
 
+    Public Function getListEndIndex() As Integer
+        Return statusList.Count - 1
+    End Function
 
     ' undo
-    Private Function undoStatus() As Status
+    Public Function undoStatus() As Status
         If statusIdx = 0 Then ' undo先がない？
-            ' 初期化
-            colorSet(DefaultBackColor, 0)
-            getButtonOfIdx(0).Text = ""
-            statusIdx = -1
-            Return New Status
-        ElseIf statusIdx < 0 Then
-            Return Null
+            Return Nothing
         End If
-
-        statusIdx = statusIdx - 1
 
         ' 情報の初期化(戻る前の処理)
         Dim buttonIdx As Integer = getIdxOfButton(getStatus(statuIdx).buttonRow, getStatus(statusIdx).buttonColumn)
@@ -53,20 +48,18 @@ Public Class StatusListMgr
         colorSet(DefaultBackColor, buttonIdx)
         getButtonOfIdx(buttonIdx).Text = ""
 
-        ' 1つ前の値を取得(戻る処理)
+        statusIdx = statusIdx - 1
         Return getStatus(statusIdx)
-
     End Function
 
     ' redo
-    Private Function redoStatus() As Status
-        If statusIdx >= statusList.Count - 1 Then ' redo先がない？
-            Return Null
+    Public Function redoStatus() As Status
+        If statusIdx >= getListEndIndex() Then ' redo先がない？
+            Return Nothing
         End If
 
-        statusIdx = statusIdx + 1
-
         ' 1つ後の値を取得
+        statusIdx = statusIdx + 1
         Dim statusTmp As Status = getStatus(statusIdx)
 
         ' 情報の初期化
@@ -74,7 +67,7 @@ Public Class StatusListMgr
         getButtonOfIdx(buttonIdx).Text = statusTmp.gameStatus ' 現状のマスにテキストを書き直して、次
         colorSet(statuTmp.color, buttonIdx) ' 現状のマスを塗り直して、次
 
-
+        Return statusTmp
     End Function
 
 End Class
