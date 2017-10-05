@@ -2,20 +2,13 @@
     Public Const BUTTON_ROW As Integer = 16
     Public Const BUTTON_COLUMN As Integer = 32
 
-    'TODO:constが指定できるのは組み込み型や列挙型だけ(クラスなどは使えない)
     ReadOnly Property COLOR_GREEN As Color = Color.Green
     ReadOnly Property COLOR_RED As Color = Color.Red
     ReadOnly Property COLOR_BLUE As Color = Color.Blue
+    'TODO:constが指定できるのは組み込み型や列挙型だけ(クラスなどは使えない)
 
     Dim maxLenge As Boolean
     Dim numSymbol As Char = " "
-    Dim gameStatus As String
-    Dim dominateColor As Color = COLOR_GREEN' その行を支配する色(赤、青)
-    Dim isDragon As Boolean ' ドラゴン状態か？
-    Dim buttonRow As Integer = -1
-    Dim buttonColumn As Integer = 0
-    Dim dragonBtnColumn As Integer
-    Dim color As Color
 
     Dim listMgr As New StatusListMgr
     Dim status As New Status
@@ -92,57 +85,18 @@
     ' ゲームの進捗に関するメソッド-----------------------------------------------------------------------------
     ' undo
     Private Sub undoStatus()
-        If listMgr.statusIdx <= 0 Then ' undo先がない？
-            ' 初期化
-            status.initStatus()
-            colorSet(DefaultBackColor, 0)
-            getButtonOfIdx(0).Text = status.gameStatus
-            listMgr.statusIdx = -1
-            Return
+        Dim tmpStatus As Status = listMgr.undo()
+        If Not tmpStatus = Null Then
+            status = tmpStatus
         End If
-
-        listMgr.statusIdx = listMgr.statusIdx - 1
-
-        ' 情報の初期化(戻る前の処理)
-        Dim buttonIdx As Integer = getIdxOfButton(status.buttonRow, status.buttonColumn)
-        colorSet(DefaultBackColor, buttonIdx)
-        getButtonOfIdx(buttonIdx).Text = ""
-
-        ' 1つ前の値を取得(戻る処理)
-        Dim statusTmp As Status = listMgr.getStatus(statusIdx)
-        buttonColumn = statusTmp.getButtonColumn()
-        buttonRow = statusTmp.getButtonRow()
-        dominateColor = statusTmp.getDominateColor()
-        isDragon = statusTmp.getIsDragon()
-        dragonBtnColumn = statusTmp.getDragonBtnColumn()
-        gameStatus = statusTmp.getGameStatus()
-
     End Sub
 
     ' redo
     Private Sub redoStatus()
-        If statusIdx >= statusList.Count - 1 Then ' redo先がない？
-            Return
+        Dim tmpStatus As Status = listMgr.redo()
+        If Not tmpStatus = Null Then
+            status = tmpStatus
         End If
-
-        statusIdx = statusIdx + 1
-
-        ' 1つ後の値を取得
-        Dim statusTmp As Status = getStatus(statusIdx)
-        buttonColumn = statusTmp.getButtonColumn()
-        buttonRow = statusTmp.getButtonRow()
-        dominateColor = statusTmp.getDominateColor()
-        isDragon = statusTmp.getIsDragon()
-        dragonBtnColumn = statusTmp.getDragonBtnColumn()
-        gameStatus = statusTmp.getGameStatus()
-        color = statusTmp.getColor()
-
-        ' 情報の初期化
-        Dim buttonIdx As Integer = getIdxOfButton(buttonRow, buttonColumn)
-        getButtonOfIdx(buttonIdx).Text = gameStatus ' 現状のマスにテキストを書き直して、次
-        colorSet(color, buttonIdx) ' 現状のマスを塗り直して、次
-
-
     End Sub
 
 
@@ -258,24 +212,24 @@
         ' ドラゴンは発生するか？
         Dim btn As Button = getButtonOfIdx(getIdxOfButton(status.buttonRow + 1, status.buttonColumn))
 
-        If status.isDragon = False AndAlso (isMaxLengeRow(buttonRow) OrElse isPaintButton(btn)) Then
-            If isMaxLengeColumn(buttonColumn) Then ' 範囲外
+        If status.isDragon = False AndAlso (isMaxLengeRow(status.buttonRow) OrElse isPaintButton(btn)) Then
+            If isMaxLengeColumn(status.buttonColumn) Then ' 範囲外
                 maxLenge = True
                 Return False
             End If
 
             status.isDragon = True
-            status.dragonBtnColumn = buttonColumn ' ドラゴン発生前の列を保存
+            status.dragonBtnColumn = status.buttonColumn ' ドラゴン発生前の列を保存
         End If
 
 
-        If status.getIsDragon() = False Then
-            status.setButtonRow(buttonRow + 1)
-        ElseIf isMaxLengeColumn(buttonColumn) Then ' 範囲外
+        If status.isDragon = False Then
+            status.buttonRow = status.buttonRow + 1
+        ElseIf isMaxLengeColumn(status.buttonColumn) Then ' 範囲外
             maxLenge = True
             Return False
         Else
-            status.setButtonColumn(buttonColumn + 1)
+            status.buttonColumn = status.buttonColumn + 1
         End If
 
         Return True
@@ -285,41 +239,38 @@
 
     ' 赤と青の処理が同じだったため抽出
     Private Sub dominate(ByVal color As Color)
-        Dim buttonColumn As Integer = status.getButtonColumn()
-        Dim buttonRow As Integer = status.getButtonRow()
-        
-        If status.getDominateColor() = COLOR_GREEN Then ' 中立
-            If status.getIsDragon() = False Then
-                status.setButtonRow(buttonRow + 1)
-            ElseIf isMaxLengeColumn(buttonColumn) Then ' 範囲外
+        If status.dominateColor = COLOR_GREEN Then ' 中立
+            If status.isDragon = False Then
+                status.buttonRow = status.buttonRow + 1
+            ElseIf isMaxLengeColumn(status.buttonColumn) Then ' 範囲外
                 maxLenge = True
                 Return
             Else
-                status.setButtonColumn(buttonColumn + 1)
+                status.buttonColumn = status.buttonColumn + 1
             End If
 
-        ElseIf status.getDominateColor() = color Then ' 同じ色の支配
+        ElseIf status.dominateColor = color Then ' 同じ色の支配
             If dragonGenerate() = False Then
                 Return
             End If
 
         Else ' 違う色の支配
-            If status.getIsDragon() = True Then
-                status.setButtonColumn(status.getDragonBtnColumn() + 1)
-                status.setIsDragon(False)
-            ElseIf isMaxLengeColumn(buttonColumn) Then ' 範囲外
+            If status.isDragon = True Then
+                status.buttonColumn = status.dragonBtnColumn + 1
+                status.isDragon = False
+            ElseIf isMaxLengeColumn(status.buttonColumn) Then ' 範囲外
                 maxLenge = True
                 Return
             Else
-                status.setButtonColumn(buttonColumn + 1)
+                status.buttonColumn = status.buttonColumn + 1
             End If
-            status.setButtonRow(0)
+            status.buttonRow = 0
 
         End If
 
 
-        colorSet(status.getColor(), getIdxOfButton(status.getButtonRow(), status.getButtonColumn()))
-        status.setDominateColor(status.getColor())
+        colorSet(status.color, getIdxOfButton(status.buttonRow, status.buttonColumn))
+        status.setDominateColor = status.color
 
     End Sub
 
