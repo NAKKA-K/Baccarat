@@ -79,15 +79,11 @@
         End If
 
 
-        getButtonOfIdx(getIdxOfButton(status.buttonRow, status.buttonColumn)).Text = gameStatus
+        getButtonOfIdx(getIdxOfButton(status.buttonRow, status.buttonColumn)).Text = status.gameStatus
 
 
         ' Statusを保存するために、各項目ごとにメソッドで登録
-        Dim saveStatus As Status = New Status
-        saveStatus.setButtonStatus(buttonColumn, buttonRow, color, gameStatus)
-        saveStatus.setDominateColor(dominateColor)
-        saveStatus.setDragon(isDragon, dragonBtnColumn)
-        addStatus(saveStatus) ' statusListに作成したStatusを追加
+        listMgr.addStatus(status) ' statusListに作成したStatusを追加
 
     End Sub
 
@@ -96,28 +92,24 @@
     ' ゲームの進捗に関するメソッド-----------------------------------------------------------------------------
     ' undo
     Private Sub undoStatus()
-        If statusIdx <= 0 Then ' undo先がない？
+        If listMgr.statusIdx <= 0 Then ' undo先がない？
             ' 初期化
-            buttonColumn = 0
-            buttonRow = -1
-            dominateColor = COLOR_GREEN
-            isDragon = False
-            dragonBtnColumn = 0
+            status.initStatus()
             colorSet(DefaultBackColor, 0)
-            getButtonOfIdx(0).Text = ""
-            statusIdx = -1
+            getButtonOfIdx(0).Text = status.gameStatus
+            listMgr.statusIdx = -1
             Return
         End If
 
-        statusIdx = statusIdx - 1
+        listMgr.statusIdx = listMgr.statusIdx - 1
 
-        ' 情報の初期化
-        Dim buttonIdx As Integer = getIdxOfButton(buttonRow, buttonColumn)
+        ' 情報の初期化(戻る前の処理)
+        Dim buttonIdx As Integer = getIdxOfButton(status.buttonRow, status.buttonColumn)
         colorSet(DefaultBackColor, buttonIdx)
         getButtonOfIdx(buttonIdx).Text = ""
 
-        ' 1つ前の値を取得
-        Dim statusTmp As Status = getStatus(statusIdx)
+        ' 1つ前の値を取得(戻る処理)
+        Dim statusTmp As Status = listMgr.getStatus(statusIdx)
         buttonColumn = statusTmp.getButtonColumn()
         buttonRow = statusTmp.getButtonRow()
         dominateColor = statusTmp.getDominateColor()

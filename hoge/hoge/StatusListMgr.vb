@@ -2,6 +2,12 @@ Public Class StatusListMgr
     Dim statusList As ArrayList = ArrayList.Synchronized(New ArrayList)
     Dim statusIdx As Integer = -1 ' 現在のStatus位置
 
+    Public Sub New()
+        'statusList.add(New Status)
+        ' クラスを作成した時点で初期値のStatusを追加しておく。そうすることでundoをしたときにlistの0番目をそのまま使用することができる。
+    End Sub
+
+
     Public Sub addStatus(ByVal status As Status)
         SyncLock statusList.SyncRoot
             statusIdx = statusIdx + 1
