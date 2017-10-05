@@ -4,6 +4,8 @@ Public Class StatusListMgr
 
     Public Sub New()
         statusList.Add(New Status)
+        statusIdx = statusIdx + 1
+
         ' TODO:クラスを作成した時点で初期値のStatusを追加しておく。そうすることでundoをしたときにlistの0番目をそのまま使用することができる。
     End Sub
 
@@ -38,7 +40,7 @@ Public Class StatusListMgr
 
     ' undo
     Public Function undoStatus() As Status
-        If statusIdx = 0 Then ' undo先がない？
+        If statusIdx <= 0 Then ' undo先がない？
             Return Nothing
         End If
 

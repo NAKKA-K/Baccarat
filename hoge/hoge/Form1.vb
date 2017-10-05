@@ -8,8 +8,7 @@
     ' Hangle系処理---------------------------------------------------------------------------------------------
     ' ロード時にフォーカスを設定する
     Private Sub focusTextBox(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        'Me.ActiveControl = Me.TextBox1
-        TextBox1.Focus() 'フォーカスをbox1に
+        Me.ActiveControl = Me.TextBox1
     End Sub
 
     ' テキストボックスを入力してエンターを押したときの処理
@@ -258,8 +257,8 @@
         End If
 
 
-        colorSet(status.color, status.getIdxOfButton())
-        status.dominateColor = status.color
+        colorSet(color, status.getIdxOfButton())
+        status.dominateColor = color
 
     End Sub
 
@@ -290,9 +289,9 @@
         Dim rand As New System.Random()
         Select Case rand.Next(10)
             Case 0 To 1
-                TextBox1.Text = "**"
+                'TextBox1.Text = "**"
             Case 2 To 3
-                TextBox1.Text = "//"
+                'TextBox1.Text = "//"
             Case Else
                 TextBox1.Text = rand.Next(9).ToString + rand.Next(9).ToString
         End Select
