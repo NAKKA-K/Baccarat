@@ -227,6 +227,7 @@
 
     ' 赤と青の処理が同じだったため抽出
     Private Sub dominate(ByVal color As Color)
+    'HACK:中立と同じ色の支配の場合の処理は同じで良いのでは？(中立時のドラゴン判定がされていない)
         If status.dominateColor = Color.Green Then ' 中立
             If status.isDragon = False Then
                 status.buttonRow = status.buttonRow + 1

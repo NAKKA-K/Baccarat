@@ -1,11 +1,9 @@
 Public Class StatusListMgr
     Dim statusList As ArrayList = ArrayList.Synchronized(New ArrayList)
-    Dim statusIdx As Integer = -1 ' 現在のStatus位置
+    Dim statusIdx As Integer = 0 ' 現在のStatus位置
 
     Public Sub New()
         statusList.Add(New Status)
-        statusIdx = statusIdx + 1
-
         ' TODO:クラスを作成した時点で初期値のStatusを追加しておく。そうすることでundoをしたときにlistの0番目をそのまま使用することができる。
     End Sub
 
@@ -20,6 +18,51 @@ Public Class StatusListMgr
             statusIdx = statusIdx + 1
         End SyncLock
     End Sub
+
+
+    ' undo
+    Public Function undoStatus() As Status
+        If statusIdx <= 0 Then ' undo先がない？
+            Return Nothing
+        End If
+
+        ' 情報の初期化(戻る前の処理)
+        SyncLock statusList.SyncRoot
+            Dim buttonIdx As Integer = getStatus(statusIdx).getIdxOfButton()
+        End SyncLock
+        getFormButton(buttonIdx).BackColor = Control.DefaultBackColor
+        getFormButton(buttonIdx).Text = ""
+
+        statusIdx = statusIdx - 1
+        Return getStatus(statusIdx)
+    End Function
+
+    ' redo
+    Public Function redoStatus() As Status
+        If statusIdx >= getListEndIndex() Then ' redo先がない？
+            Return Nothing
+        End If
+
+        ' 1つ後の値を取得
+        statusIdx = statusIdx + 1
+        SyncLock statusList.SyncRoot
+            Dim statusTmp As Status = getStatus(statusIdx)
+        End SyncLock
+
+        ' 情報の初期化
+        Dim buttonIdx As Integer = statusTmp.getIdxOfButton()
+        getFormButton(buttonIdx).BackColor = statusTmp.color ' 現状のマスを塗り直して、次
+        getFormButton(buttonIdx).Text = statusTmp.gameStatus ' 現状のマスにテキストを書き直して、次
+
+        Return statusTmp
+    End Function
+
+
+    ' Form1のボタン取得するメソッド
+    Private Shared Function getFormButton(ByVal buttonIdx As Integer) As Button
+        Return Form1.Controls("Button" & buttonIdx.ToString)
+    End Function
+
 
     'TODO:デフォルト引数に変数は使えない？
     Public Function getStatus(ByVal idx As Integer) As Status
@@ -36,45 +79,6 @@ Public Class StatusListMgr
 
     Public Function getListEndIndex() As Integer
         Return statusList.Count - 1
-    End Function
-
-    ' undo
-    Public Function undoStatus() As Status
-        If statusIdx <= 0 Then ' undo先がない？
-            Return Nothing
-        End If
-
-        ' 情報の初期化(戻る前の処理)
-        Dim buttonIdx As Integer = getStatus(statusIdx).getIdxOfButton()
-        getFormButton(buttonIdx).BackColor = Control.DefaultBackColor
-        getFormButton(buttonIdx).Text = ""
-
-        statusIdx = statusIdx - 1
-        Return getStatus(statusIdx)
-    End Function
-
-    ' redo
-    Public Function redoStatus() As Status
-        If statusIdx >= getListEndIndex() Then ' redo先がない？
-            Return Nothing
-        End If
-
-        ' 1つ後の値を取得
-        statusIdx = statusIdx + 1
-        Dim statusTmp As Status = getStatus(statusIdx)
-
-        ' 情報の初期化
-        Dim buttonIdx As Integer = statusTmp.getIdxOfButton()
-        getFormButton(buttonIdx).Text = statusTmp.gameStatus ' 現状のマスにテキストを書き直して、次
-        getFormButton(buttonIdx).BackColor = statusTmp.color ' 現状のマスを塗り直して、次
-
-        Return statusTmp
-    End Function
-
-
-    ' Form1のボタン取得するメソッド
-    Private Shared Function getFormButton(ByVal buttonIdx As Integer) As Button
-        Return Form1.Controls("Button" & buttonIdx.ToString)
     End Function
 
 End Class
